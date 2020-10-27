@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  integration_fortinet:
+    container_name: integration_fortinet
+    build: .
+    restart: unless-stopped
+    command:
+      - gunicorn
+      - --log-level=info
+      - --error-logfile=/var/log/integration_fortinet/gunicorn.log
+      - --access-logfile=/var/log/integration_fortinet/access.log
+      - --timeout=60
+      - --bind=0.0.0.0:5000
+      - integration_fortinet:app
+    volumes:
+      - ./:/app/:ro
+      - logs:/var/log/integration_fortinet
+    working_dir: /app/
+    ports:
+      - 5000:5000
+    env_file:
+      - ./envs/oracle.env
+      - ./envs/salt.env
+    environment:
+      WEB_CONCURRENCY: 4
+
+volumes:
+  logs:
