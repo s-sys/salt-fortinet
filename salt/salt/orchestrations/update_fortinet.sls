@@ -50,7 +50,7 @@ def run():
         # Avoid proxy errors
         os.environ['no_proxy'] = '*'
 
-        # Make sure we can import our custom libraries from _modules/python/
+        # Make sure we can import our custom libraries from '/salt/_modules/python/'
         for module_dir in __opts__['module_dirs']:
             sys.path.insert(0, os.path.join(module_dir, 'python/'))
 

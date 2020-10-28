@@ -1,3 +1,0 @@
-cx-Oracle==7.3.0
-pyfortiapi==0.2.0
-ipython==7.15.0

@@ -18,4 +18,4 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
 STOPSIGNAL SIGINT
-CMD [ "python3", "./integration_fortinet.py" ]
+CMD [ "python3", "./fortinet.py" ]

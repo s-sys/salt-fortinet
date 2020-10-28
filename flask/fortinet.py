@@ -19,11 +19,11 @@ from pepper.libpepper import Pepper
 from flask import Flask, request, jsonify
 
 
-LOG_FILE = '/var/log/integration_fortinet/integration_fortinet.log'
+LOG_FILE = '/var/log/fortinet/fortinet.log'
 logging.basicConfig(filename=LOG_FILE, level=logging.INFO)
-log = logging.getLogger('IntegrationFortinet')
+log = logging.getLogger('Fortinet')
 
-app = Flask('IntegrationFortinet')  # pylint: disable=invalid-name
+app = Flask('Fortinet')  # pylint: disable=invalid-name
 
 # ServiceNow status
 SERVICENOW_STATUS_PENDING = 0
@@ -117,45 +117,47 @@ SALT_EAUTH = os.getenv('SALT_EAUTH', 'pam')
 
 # Complementary Fortinet template data to be formatted and inserted into Oracle
 ORACLE_TEMPLATE_HEAD = [
-    {
-        'table': 'fortinet_store',
-        'fields': ['store', 'bandeira', 'cidade', 'estado', 'num_regional', 'fortinet_ip',
-                   'fortinet_port', 'citrix'],
-        'values': [
-            ('{store}', '{bandeira}', '{cidade}', '{estado}', '{num_regional}', '{fortinet_ip}',
-             '{fortinet_port}', '{citrix}'),
-        ],
-    }, {
-        'table': 'fortinet_address',
-        'fields': ['store', 'name', '"comment"', 'subnet'],
-        'values': [
-            ('{store}', 'GRP_SRC_{{ip}}', 'HOST_{{ip}}', '{{ip}} 255.255.255.255'),
-        ],
-    }, {
-        'table': 'fortinet_addressgroup',
-        'fields': ['store', 'name', '"comment"'],
-        'values': [
-            ('{store}', 'GRP_SRV', 'Server Group'),
-            ('{store}', 'GRP_SRC_{store:04d}', 'Source Group'),
-        ],
-    }, {
-        'table': 'fortinet_addressgroup_member',
-        'fields': ['store', 'addressgroup', 'address'],
-        'values': [
-            ('{store}', 'GRP_SRC_{store:04d}', 'GRP_SRC_{{ip}}'),
-        ],
-    },
+    # {
+    #     'table': 'fortinet_store',
+    #     'fields': ['store', 'flag', 'city', 'state', 'region', 'fortinet_ip',
+    #                'fortinet_port', 'citrix'],
+    #     'values': [
+    #         ('{store}', '{flag}', '{city}', '{state}', '{region}', '{fortinet_ip}',
+    #          '{fortinet_port}', '{citrix}'),
+    #     ],
+    # }, {
+    #     'table': 'fortinet_address',
+    #     'fields': ['store', 'name', '"comment"', 'subnet'],
+    #     'values': [
+    #         ('{store}', 'GRP_SRC_{{ip}}', 'HOST_{{ip}}', '{{ip}} 255.255.255.255'),
+    #     ],
+    # }, {
+    #     'table': 'fortinet_addressgroup',
+    #     'fields': ['store', 'name', '"comment"'],
+    #     'values': [
+    #         ('{store}', 'GRP_SRV', 'Server Group'),
+    #         ('{store}', 'GRP_SRC_{store:04d}', 'Source Group'),
+    #     ],
+    # }, {
+    #     'table': 'fortinet_addressgroup_member',
+    #     'fields': ['store', 'addressgroup', 'address'],
+    #     'values': [
+    #         ('{store}', 'GRP_SRC_{store:04d}', 'GRP_SRC_{{ip}}'),
+    #     ],
+    # },
 ]
 
 ORACLE_TEMPLATE_TAIL = [
-    {
-        'table': 'fortinet_profile',
-        'fields': ['store', 'profile', 'policy'],
-        'values': [
-            ('{store}', 'perfil1', 'PCI_IN_P1'),
-            ('{store}', 'perfil2', 'PCI_IN_P2'),
-        ],
-    },
+    # {
+    #     'table': 'fortinet_profile',
+    #     'fields': ['store', 'profile', 'policy'],
+    #     'values': [
+    #         ('{store}', 'profile1', 'PCI_IN_PROFILE1'),
+    #         ('{store}', 'profile1', 'PCI_OUT_PROFILE1'),
+    #         ('{store}', 'profile2', 'PCI_IN_PROFILE2'),
+    #         ('{store}', 'profile2', 'PCI_OUT_PROFILE2'),
+    #     ],
+    # },
 ]
 
 # Procedures to delete Fortinet data of a store from Oracle
@@ -215,10 +217,10 @@ def create_store():
                 try:
                     context = {
                         'store': store_id,
-                        'bandeira': store['bandeira'],
-                        'cidade': store['cidade'],
-                        'estado': store['estado'],
-                        'num_regional': int(store['num_regional']),
+                        'flag': store['flag'],
+                        'city': store['city'],
+                        'state': store['state'],
+                        'region': int(store['region']),
                         'fortinet_ip': store['fortinet_ip'],
                         'fortinet_port': int(store['fortinet_port']),
                         'citrix': str(int(store['citrix'])),

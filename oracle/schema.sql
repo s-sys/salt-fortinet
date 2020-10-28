@@ -17,19 +17,19 @@ create index minion_profile_processed_idx on minion_profile (processed);
 
 create table fortinet_store (
   store number(4) not null primary key,
-  bandeira varchar2(2) not null,
-  cidade varchar2(64) not null,
-  estado varchar2(2) not null,
-  num_regional number(4) not null,
+  flag varchar2(2) not null,
+  city varchar2(64) not null,
+  state varchar2(2) not null,
+  region number(4) not null,
   fortinet_ip varchar2(45) not null,
   fortinet_port number(5) default 11443 not null,
   citrix number(1) default 0 not null,
   constraint fortinet_store_citrix check (citrix in (0, 1))
 );
-create index fortinet_store_bandeira_idx on fortinet_store (bandeira);
-create index fortinet_store_cidade_idx on fortinet_store (cidade);
-create index fortinet_store_estado_idx on fortinet_store (estado);
-create index fortinet_store_num_regional_idx on fortinet_store (num_regional);
+create index fortinet_store_flag_idx on fortinet_store (flag);
+create index fortinet_store_city_idx on fortinet_store (city);
+create index fortinet_store_state_idx on fortinet_store (state);
+create index fortinet_store_region_idx on fortinet_store (region);
 create index fortinet_store_citrix_idx on fortinet_store (citrix);
 
 create table fortinet_servicenow (

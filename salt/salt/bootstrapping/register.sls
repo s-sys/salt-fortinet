@@ -1,13 +1,18 @@
-# {%- from "maps/defs.jinja" import with context %}
-# {%- from "maps/network.jinja" import with context %}
-{%- set store = salt['grains.get']('num_store', False) %}
+{%- set profile = salt['grains.get']('profile') %}
+{%- set current_profile = salt['pillar.get']('profile') %}
 
+# These grains are not included in this repository
+{%- set store = salt['grains.get']('store') %}
+{%- set network = salt['grains.get']('network') %}
+
+{%- if current_profile != profile %}
 send_new_minion_event:
   event.send:
     - name: salt/register/new_minion
     - data:
-        ip: {{ net_info['ip'] }}
-        mac_address: {{ net_info['mac'] }}
-        hostname: {{ net_info['hostname'] }}
         store: {{ store }}
-        profile: {{ bootstrap }}
+        profile: {{ profile }}
+        ip: {{ network['ip'] }}
+        mac_address: {{ network['mac'] }}
+        hostname: {{ network['hostname'] }}
+{%- endif %}

@@ -1,21 +1,21 @@
 version: "3.7"
 
 services:
-  integration_fortinet:
-    container_name: integration_fortinet
+  fortinet:
+    container_name: fortinet
     build: .
     restart: unless-stopped
     command:
       - gunicorn
       - --log-level=info
-      - --error-logfile=/var/log/integration_fortinet/gunicorn.log
-      - --access-logfile=/var/log/integration_fortinet/access.log
+      - --error-logfile=/var/log/fortinet/gunicorn.log
+      - --access-logfile=/var/log/fortinet/access.log
       - --timeout=60
       - --bind=0.0.0.0:5000
-      - integration_fortinet:app
+      - fortinet:app
     volumes:
       - ./:/app/:ro
-      - logs:/var/log/integration_fortinet
+      - logs:/var/log/fortinet
     working_dir: /app/
     ports:
       - 5000:5000
